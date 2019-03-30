@@ -2,7 +2,9 @@ package tw.core.generator;
 
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import tw.core.Answer;
 import tw.core.exception.OutOfRangeAnswerException;
 
@@ -15,7 +17,9 @@ public class AnswerGeneratorTest {
 
     private AnswerGenerator answerGenerator;
     private RandomIntGenerator randomIntGenerator;
-    private Answer answer;
+
+    @Rule
+    public ExpectedException exception = ExpectedException.none();
 
     @Before
     public void setUp() {
@@ -33,5 +37,14 @@ public class AnswerGeneratorTest {
         Assert.assertNotNull(answer);
     }
 
+    @Test
+    public void  testGenerateException() throws OutOfRangeAnswerException {
+        exception.expect(OutOfRangeAnswerException.class);
+        exception.expectMessage("Answer format is incorrect");
+
+        when(randomIntGenerator.generateNums(9, 4)).thenReturn("0 7 2 16");
+        Answer answer =answerGenerator.generate();
+        Assert.assertNotNull(answer);
+    }
 }
 
